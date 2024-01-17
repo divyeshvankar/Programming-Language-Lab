@@ -3,7 +3,7 @@ class Light {
     public long sleepTime;
 
     public synchronized void printLight() {
-        System.out.print( "->"+name);
+        System.out.print( name);
     }
 
     
@@ -20,7 +20,7 @@ class Red implements Runnable {
 
         red.printLight();
         try {
-            Thread.sleep(red.sleepTime);
+            Thread.sleep(red.sleepTime*1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -38,7 +38,7 @@ class Green implements Runnable {
 
         green.printLight();
         try {
-            Thread.sleep(green.sleepTime);
+            Thread.sleep(green.sleepTime*1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -56,7 +56,7 @@ class Yellow implements Runnable {
 
         yellow.printLight();
         try {
-            Thread.sleep(yellow.sleepTime);
+            Thread.sleep(yellow.sleepTime*1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -64,8 +64,9 @@ class Yellow implements Runnable {
     }
 }
 
-public class TrafficSignal {
-    public static void main(String args[]) throws InterruptedException {
+class TrafficSignal implements Runnable {
+    @Override
+    public void run() {
         Light red = new Light();
         red.name="Red";
         red.sleepTime=10;
@@ -79,18 +80,54 @@ public class TrafficSignal {
         yellow.sleepTime=3;
 
        
-        for(int i=0;i<5;i++)
-        {
+        
+           
+         while(true)
+         {
             Thread t1 = new Thread(new Red(red));
             Thread t2 = new Thread(new Green(green));
             Thread t3 = new Thread(new Yellow(yellow));
-
+         
             t1.start();
-            t1.join();
+            try {
+                t1.join();
+            } catch (InterruptedException e) {
+               
+                e.printStackTrace();
+            }
             t2.start();
-            t2.join();
+            try {
+                t2.join();
+            } catch (InterruptedException e) {
+                
+                e.printStackTrace();
+            }
             t3.start();
-            t3.join();
+            try {
+                t3.join();
+            } catch (InterruptedException e) {
+                
+                e.printStackTrace();
+            }
         }
+    }
+    
+}
+
+
+
+public class Main{
+
+    
+    
+    public static void main(String args[])  {
+        TrafficSignal intersection1= new TrafficSignal();
+        TrafficSignal intersection2= new TrafficSignal();
+        Thread thread1 = new Thread(intersection1);
+        Thread thread2 = new Thread(intersection2);
+
+        thread1.start();
+        thread2.start();
+
     }
 }
