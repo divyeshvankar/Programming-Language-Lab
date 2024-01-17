@@ -1,0 +1,217 @@
+class Counter {
+    private int count = 0;
+
+    public synchronized void increment() {
+        count++;
+    }
+
+    public synchronized int getCount() {
+        return count;
+    }
+}
+
+class MyRunnable implements Runnable {
+    private Counter counter;
+
+    public MyRunnable(Counter counter) {
+        this.counter = counter;
+    }
+
+    public void run() {
+        for (int i = 0; i < 10000; i++) {
+            counter.increment();
+        }
+    }
+}
+
+public class RunnableSynchronizationExample {
+    public static void main(String[] args) throws InterruptedException {
+        Counter counter = new Counter();
+
+        MyRunnable myRunnable = new MyRunnable(counter);
+
+        Thread t1 = new Thread(myRunnable);
+        Thread t2 = new Thread(myRunnable);
+
+        t1.start();
+        t2.start();
+
+        t1.join();
+        t2.join();
+
+        System.out.println("Count: " + counter.getCount());
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+****************************************************
+class Counter {
+    private int count = 0;
+
+    public void increment() {
+        synchronized (this) {
+            count++;
+        }
+    }
+
+    public int getCount() {
+        synchronized (this) {
+            return count;
+        }
+    }
+}
+
+class MyThread extends Thread {
+    private Counter counter;
+
+    public MyThread(Counter counter) {
+        this.counter = counter;
+    }
+
+    public void run() {
+        for (int i = 0; i < 10000; i++) {
+            counter.increment();
+        }
+    }
+}
+
+public class SynchronizedBlockExample {
+    public static void main(String[] args) throws InterruptedException {
+        Counter counter = new Counter();
+
+        Thread t1 = new MyThread(counter);
+        Thread t2 = new MyThread(counter);
+
+        t1.start();
+        t2.start();
+
+        t1.join();
+        t2.join();
+
+        System.out.println("Count: " + counter.getCount());
+    }
+}
+
+
+
+
+
+
+
+*********************************8
+class Counter {
+    private int count = 0;
+
+    public synchronized void increment() {
+        count++;
+    }
+
+    public synchronized int getCount() {
+        return count;
+    }
+}
+
+class MyThread extends Thread {
+    private Counter counter;
+
+    public MyThread(Counter counter) {
+        this.counter = counter;
+    }
+
+    public void run() {
+        for (int i = 0; i < 10000; i++) {
+            counter.increment();
+        }
+    }
+}
+
+public class SynchronizedMethodExample {
+    public static void main(String[] args) throws InterruptedException {
+        Counter counter = new Counter();
+
+        Thread t1 = new MyThread(counter);
+        Thread t2 = new MyThread(counter);
+
+        t1.start();
+        t2.start();
+
+        t1.join();
+        t2.join();
+
+        System.out.println("Count: " + counter.getCount());
+    }
+}
+
+
+
+
+******************************8
+class MyThread extends Thread {
+    public void run() {
+        for (int i = 1; i <= 5; i++) {
+            System.out.println(Thread.currentThread().getId() + " Value " + i);
+        }
+    }
+}
+
+public class ThreadExample {
+    public static void main(String args[]) {
+        MyThread t1 = new MyThread();
+        t1.start();
+
+        MyThread t2 = new MyThread();
+        t2.start();
+    }
+}
+************************************
+class MyRunnable implements Runnable {
+    public void run() {
+        for (int i = 1; i <= 5; i++) {
+            System.out.println(Thread.currentThread().getId() + " Value " + i);
+        }
+    }
+}
+
+public class RunnableExample {
+    public static void main(String args[]) {
+        Thread t1 = new Thread(new MyRunnable());
+        t1.start();
+
+        Thread t2 = new Thread(new MyRunnable());
+        t2.start();
+    }
+}
+*************************************
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+class MyCallable implements Callable<String> {
+    public String call() throws Exception {
+        return Thread.currentThread().getId() + " Callable Result";
+    }
+}
+
+public class CallableExample {
+    public static void main(String args[]) throws Exception {
+        ExecutorService executorService = Executors.newFixedThreadPool(2);
+
+        Future<String> future1 = executorService.submit(new MyCallable());
+        Future<String> future2 = executorService.submit(new MyCallable());
+
+        System.out.println(future1.get());
+        System.out.println(future2.get());
+
+        executorService.shutdown();
+    }
+}
