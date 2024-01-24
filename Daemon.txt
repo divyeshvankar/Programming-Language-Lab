@@ -1,0 +1,81 @@
+Certainly! Here's a basic Java program that fulfills the requirements you mentioned:
+
+```java
+class TaskExecutor {
+    public void executeTask() {
+        System.out.println("Executing a task...");
+        try {
+            Thread.sleep(2000); // Simulate processing time
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+class DaemonThreadCreator extends Thread {
+    @Override
+    public void run() {
+        TaskExecutor taskExecutor = new TaskExecutor();
+
+        // Create and set daemon threads
+        Thread daemonThread1 = new Thread(() -> {
+            while (true) {
+                System.out.println("Daemon Thread 1 is running...");
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        daemonThread1.setDaemon(true);
+
+        Thread daemonThread2 = new Thread(() -> {
+            while (true) {
+                System.out.println("Daemon Thread 2 is running...");
+                try {
+                    Thread.sleep(1500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        daemonThread2.setDaemon(true);
+
+        Thread daemonThread3 = new Thread(() -> {
+            while (true) {
+                System.out.println("Daemon Thread 3 is running...");
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        daemonThread3.setDaemon(true);
+
+        // Start daemon threads
+        daemonThread1.start();
+        daemonThread2.start();
+        daemonThread3.start();
+
+        // Create and start non-daemon thread
+        Thread nonDaemonThread = new Thread(() -> {
+            TaskExecutor taskExecutor1 = new TaskExecutor();
+            for (int i = 0; i < 5; i++) {
+                taskExecutor1.executeTask();
+            }
+        });
+        nonDaemonThread.start();
+    }
+}
+
+public class MainProgram {
+    public static void main(String[] args) {
+        DaemonThreadCreator daemonThreadCreator = new DaemonThreadCreator();
+        daemonThreadCreator.start();
+    }
+}
+```
+
+This program creates a non-daemon thread in the `main` method, and inside the `run` method of `DaemonThreadCreator`, it creates and sets three daemon threads. The daemon threads perform unique tasks while the non-daemon thread executes its task in the background.
