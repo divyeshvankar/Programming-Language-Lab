@@ -89,4 +89,48 @@ public class Main {
             }).start();
         }
     }
+}      import java.util.Arrays;
+
+class ConcurrentCircularQueue {
+    // (Same as before)
+
+    public synchronized void performOperation(String operation, int item) {
+        switch (operation.toLowerCase()) {
+            case "enqueue":
+                enqueue(item);
+                System.out.println("Enqueued: " + item);
+                break;
+            case "dequeue":
+                int dequeued = dequeue();
+                System.out.println("Dequeued: " + dequeued);
+                break;
+            case "sort":
+                sortAndPrint();
+                break;
+            default:
+                System.out.println("Invalid operation");
+        }
+    }
 }
+
+public class Main {
+    public static void main(String[] args) {
+        int capacity = 5;
+        ConcurrentCircularQueue concurrentQueue = new ConcurrentCircularQueue(capacity);
+        int numThreads = 3;
+
+        for (int i = 0; i < numThreads; i++) {
+            final int threadNum = i;
+            new Thread(() -> {
+                // Example: Perform some enqueue, dequeue, and sort operations
+                for (int j = 0; j < 3; j++) {
+                    concurrentQueue.performOperation("enqueue", threadNum * 10 + j);
+                    concurrentQueue.performOperation("dequeue", 0);
+                }
+
+                concurrentQueue.performOperation("sort", 0);
+            }).start();
+        }
+    }
+}
+
